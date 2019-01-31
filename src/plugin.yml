@@ -1,0 +1,12 @@
+name: InvisibleArmor
+version: 1.0
+main: com.janmaki.mqrimo.invisible_armor.Main
+author: JanMaki
+
+commands:
+  invArmor:
+    description: /invArmor <args...>
+
+permissions:
+  invArmor.*:
+    default: true
