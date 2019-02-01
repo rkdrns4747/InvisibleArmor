@@ -32,9 +32,9 @@ class Core {
         craftPlayer.getHandle().playerConnection.sendPacket(feet);
         PacketPlayOutEntityEquipment legs = new PacketPlayOutEntityEquipment(entityPlayer.getId(),EnumItemSlot.LEGS,CraftItemStack.asNMSCopy(itemStack));
         craftPlayer.getHandle().playerConnection.sendPacket(legs);
-        Set set = map.get(player);
+        Set<Player> set = map.get(player);
         if (set == null) {
-            set = new HashSet();
+            set = new HashSet<>();
         }
         set.add(victim);
         map.put(player,set);
@@ -48,7 +48,7 @@ class Core {
         return map.get(player);
     }
 
-    static void put(Player player,Set set) {
+    static void put(Player player,Set<Player> set) {
         map.put(player,set);
     }
 

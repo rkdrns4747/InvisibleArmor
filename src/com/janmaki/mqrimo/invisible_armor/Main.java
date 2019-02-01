@@ -15,6 +15,7 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Bukkit.getServer().getPluginManager().registerEvents(new ListInv(this),this);
         new Regularly(this);
         map = Core.get();
     }
@@ -82,6 +83,10 @@ public class Main extends JavaPlugin {
             player.sendMessage(ChatColor.GREEN+"Invisibility of "+victim.getDisplayName()+"\'s armor.");
             return true;
         }
+        if (args[0].equalsIgnoreCase("list")) {
+            ListInv.listHub(player);
+            return true;
+        }
         sendHelp(player);
         return true;
     }
@@ -92,6 +97,7 @@ public class Main extends JavaPlugin {
         player.sendMessage( ChatColor.GREEN+"/invArmor all"+ChatColor.DARK_GREEN+": "+ChatColor.GREEN+"Invisibility of other all player's armor.");
         player.sendMessage( ChatColor.GREEN+"/invArmor me"+ChatColor.DARK_GREEN+": "+ChatColor.GREEN+"Invisibility of other all your armor.");
         player.sendMessage( ChatColor.GREEN+"/invArmor reset"+ChatColor.DARK_GREEN+": "+ChatColor.GREEN+"Solved invisibility about your armor.");
+        player.sendMessage( ChatColor.GREEN+"/invArmor list"+ChatColor.DARK_GREEN+": "+ChatColor.GREEN+"Open the GUI for management.");
         player.sendMessage(ChatColor.DARK_GREEN+"=---------------------------------=");
     }
 }
