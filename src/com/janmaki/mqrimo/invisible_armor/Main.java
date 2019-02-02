@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,12 +13,22 @@ import java.util.*;
 
 public class Main extends JavaPlugin {
     private static Map<Player, Set<Player>> map;
+    private static CustomConfiguration sfile;
+    private static FileConfiguration save;
 
     @Override
     public void onEnable() {
-        Bukkit.getServer().getPluginManager().registerEvents(new ListInv(this),this);
         new Regularly(this);
+
+        sfile = new CustomConfiguration(this,"save.yml");
+        sfile.saveDefaultConfig();
+        save = sfile.getConfig();
+        Bukkit.getServer().getPluginManager().registerEvents(new ListInv(this,sfile),this);
+        Bukkit.getServer().getPluginManager().registerEvents(new JoinEvent(save),this);
+
+        new Core(sfile);
         map = Core.get();
+
     }
 
     @Override
@@ -36,12 +47,12 @@ public class Main extends JavaPlugin {
             return true;
         }
         Player player = (Player) sender;
-        if (!(player.hasPermission("invArmor.*"))) {
-            player.sendMessage(ChatColor.RED+"*Permission Error.( invArmor.* )");
-            return true;
-        }
         List<Player> players = player.getWorld().getPlayers();
         if (args[0].equalsIgnoreCase("all")) {
+            if (!(player.hasPermission("invArmor.*") || player.hasPermission("invArmor.add"))) {
+                player.sendMessage(ChatColor.RED+"*Permission Error.( invArmor.* )");
+                return true;
+            }
             for (Player p: players) {
                 Core.invArmor(player,p);
             }
@@ -49,6 +60,10 @@ public class Main extends JavaPlugin {
             return true;
         }
         if (args[0].equalsIgnoreCase("me")) {
+            if (!(player.hasPermission("invArmor.*") || player.hasPermission("invArmor.me"))) {
+                player.sendMessage(ChatColor.RED+"*Permission Error.( invArmor.* )");
+                return true;
+            }
             for (Player p: players) {
                 Core.invArmor(p,player);
             }
@@ -56,6 +71,10 @@ public class Main extends JavaPlugin {
             return true;
         }
         if (args[0].equalsIgnoreCase("reset")) {
+            if (!(player.hasPermission("invArmor.*") || player.hasPermission("invArmor.reset"))) {
+                player.sendMessage(ChatColor.RED+"*Permission Error.( invArmor.* )");
+                return true;
+            }
             Core.reset(player);
             for (Player p: players) {
                 Set set = Core.get(p);
@@ -71,6 +90,10 @@ public class Main extends JavaPlugin {
             return true;
         }
         if (args[0].equalsIgnoreCase("player")) {
+            if (!(player.hasPermission("invArmor.*") || player.hasPermission("invArmor.player"))) {
+                player.sendMessage(ChatColor.RED+"*Permission Error.( invArmor.* )");
+                return true;
+            }
             if (args.length < 2) {
                 return true;
             }
@@ -84,6 +107,10 @@ public class Main extends JavaPlugin {
             return true;
         }
         if (args[0].equalsIgnoreCase("list")) {
+            if (!(player.hasPermission("invArmor.*") || player.hasPermission("invArmor.list"))) {
+                player.sendMessage(ChatColor.RED+"*Permission Error.( invArmor.* )");
+                return true;
+            }
             ListInv.listHub(player);
             return true;
         }

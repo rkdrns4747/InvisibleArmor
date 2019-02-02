@@ -25,7 +25,7 @@ class Regularly implements Listener {
             public void run() {
                 for(Player player:map.keySet()) {
                     for (Player victim:map.get(player)) {
-                        Core.invArmor(player,victim);
+                        Core.invArmor(player,victim,false);
                     }
                 }
                 regularly();

@@ -4,21 +4,35 @@ import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumItemSlot;
 import net.minecraft.server.v1_13_R2.PacketPlayOutEntityEquipment;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 class Core {
     private static Map<Player, Set<Player>> map = new HashMap<>();
+    private static CustomConfiguration sfile;
+    private static FileConfiguration save;
+
+
+    Core(CustomConfiguration sfile) {
+        this.sfile = sfile;
+        this.save = this.sfile.getConfig();
+        map = Core.get();
+    }
 
     static void invArmor(Player player,Player victim) {
+        invArmor(player,victim ,true);
+    }
+
+    static void invArmor(Player player,Player victim ,boolean b) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
+        if (victim == null) {
+            return;
+        }
         if (victim.equals(player)) {
             return;
         }
@@ -38,6 +52,19 @@ class Core {
         }
         set.add(victim);
         map.put(player,set);
+
+        if (b) {
+            return;
+        }
+        List<String> list = new ArrayList<>();
+        for(Player sp:set) {
+            if (sp == null) {
+                continue;
+            }
+            list.add(sp.getDisplayName());
+        }
+        save.set(player.getDisplayName(),list);
+        sfile.saveConfig();
     }
 
     static Map<Player, Set<Player>> get(){
@@ -54,5 +81,10 @@ class Core {
 
     static void reset(Player player) {
         map.remove(player);
+
+        Set set = new HashSet();
+        set = get(player);
+        save.set(player.getDisplayName(),set);
+        sfile.saveConfig();
     }
 }

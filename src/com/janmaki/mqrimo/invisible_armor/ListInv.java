@@ -3,6 +3,7 @@ package com.janmaki.mqrimo.invisible_armor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,11 +19,15 @@ import java.util.*;
 class ListInv implements Listener {
     private static Main main;
     private static Map<Player, Set<Player>> map;
+    private static CustomConfiguration sfile;
+    private static FileConfiguration save;
 
-
-    ListInv(Main main) {
+    ListInv(Main main,CustomConfiguration sfile) {
         this.main = main;
         map = Core.get();
+
+        this.sfile = sfile;
+        save = this.sfile.getConfig();
     }
 
 
@@ -75,6 +80,9 @@ class ListInv implements Listener {
             players = new HashSet<>();
         }
         for (Player p: players) {
+            if (p  == null) {
+                continue;
+            }
             ItemStack skull = setLore(getSkull(p),p);
             inv.addItem(skull);
         }
@@ -91,6 +99,9 @@ class ListInv implements Listener {
                 set = new HashSet();
             }
             if (set.contains(player)) {
+                if (p == null) {
+                    continue;
+                }
                 ItemStack skull = setLore(getSkull(p),p);
                 inv.addItem(skull);
             }
@@ -113,6 +124,16 @@ class ListInv implements Listener {
                 Set<Player> set = Core.get(player);
                 set.remove(headPlayer);
                 map.put(player,set);
+
+                List<String> list = new ArrayList<>();
+                for(Player sp:set) {
+                    if (sp == null) {
+                        continue;
+                    }
+                    list.add(sp.getDisplayName());
+                }
+                save.set(player.getDisplayName(),list);
+                sfile.saveConfig();
                 menu1(player);
             }
             if (event.getCurrentItem().getType() == Material.SLIME_BALL) {
@@ -131,6 +152,16 @@ class ListInv implements Listener {
                 Set<Player> set = Core.get(headPlayer);
                 set.remove(player);
                 map.put(headPlayer,set);
+
+                List<String> list = new ArrayList<>();
+                for(Player sp:set) {
+                    if (sp == null) {
+                        continue;
+                    }
+                    list.add(sp.getDisplayName());
+                }
+                save.set(player.getDisplayName(),list);
+                sfile.saveConfig();
                 menu2(player);
             }
             if (event.getCurrentItem().getType() == Material.SLIME_BALL) {
