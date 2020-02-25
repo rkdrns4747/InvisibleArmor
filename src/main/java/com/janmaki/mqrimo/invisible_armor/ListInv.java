@@ -41,7 +41,7 @@ class ListInv implements Listener {
         playerSkull.setItemMeta(meta);
         ItemStack mainSkull = new ItemStack(Material.SKULL_ITEM, 1);
         SkullMeta skullMeta = (SkullMeta) mainSkull.getItemMeta();
-        UUID defaultUniqueId = UUID.fromString("8667ba71b85a4004af54457a9734eed7");
+        UUID defaultUniqueId = UUID.fromString("8667ba71-b85a-4004-af54-457a9734eed7");
         skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(defaultUniqueId));
         mainSkull.setItemMeta(skullMeta);
         ItemStack defaultSkull = mainSkull;
