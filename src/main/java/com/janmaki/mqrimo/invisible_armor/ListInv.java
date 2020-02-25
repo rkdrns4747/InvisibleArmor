@@ -17,7 +17,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
-
+/**
 class ListInv implements Listener {
     private static Main main;
     private static Map<Player, Set<Player>> map;
@@ -222,3 +222,4 @@ class ListInv implements Listener {
         inv.setItem(18,back);
     }
 }
+**/

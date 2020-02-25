@@ -6,16 +6,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import com.janmaki.mqrimo.invisible_armor.Main;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class JoinEvent implements Listener {
-    FileConfiguration save;
+    CustomConfiguration sfile;
+    private static Map<String, Boolean> map;
+    private Main main;
 
-    JoinEvent(FileConfiguration save) {
-        this.save = save;
+
+    JoinEvent(CustomConfiguration save) {
+        this.sfile = save;
     }
 
 
@@ -23,11 +25,23 @@ public class JoinEvent implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        List<String> list = save.getStringList(player.getDisplayName());
-        Set<Player> players = new HashSet<>();
-        for (String str:list) {
-            players.add(Bukkit.getServer().getPlayer(str));
+        //List<String> list = save.getStringList(player.getUniqueId().toString());
+        sfile = new CustomConfiguration(main,"save.yml");
+        new Core(sfile);
+        Map<String, Boolean> visibleMap = new HashMap<>();
+        map = Core.get(player);
+        if(map.get("isArmorInvisible")) {
+            visibleMap.put("isArmorInvisible", true);
         }
-        Core.put(player,players);
+        Core.put(player, visibleMap);
+
+        Boolean isArmorInvisible = map.get("isArmorInvisible");
+        player.sendMessage(String.valueOf(isArmorInvisible));
+        player.sendMessage(map.toString());
+        List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
+        //if(isArmorInvisible){
+                Core.invArmor(player);
+        //}
+
     }
 }

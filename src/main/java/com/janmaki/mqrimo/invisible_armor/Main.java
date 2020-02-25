@@ -12,19 +12,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.*;
 
 public class Main extends JavaPlugin {
-    private static Map<Player, Set<Player>> map;
+    private static Map<Player, Map<String, Boolean>> map;
     private static CustomConfiguration sfile;
     private static FileConfiguration save;
-
     @Override
     public void onEnable() {
         new Regularly(this);
 
+
         sfile = new CustomConfiguration(this,"save.yml");
         sfile.saveDefaultConfig();
         save = sfile.getConfig();
-        Bukkit.getServer().getPluginManager().registerEvents(new ListInv(this,sfile),this);
-        Bukkit.getServer().getPluginManager().registerEvents(new JoinEvent(save),this);
+       //Bukkit.getServer().getPluginManager().registerEvents(new ListInv(this,sfile),this);
+        Bukkit.getServer().getPluginManager().registerEvents(new JoinEvent(sfile),this);
 
         new Core(sfile);
         map = Core.get();
@@ -47,30 +47,19 @@ public class Main extends JavaPlugin {
             return true;
         }
         Player player = (Player) sender;
-        List<Player> players = player.getWorld().getPlayers();
-        if (args[0].equalsIgnoreCase("all")) {
-            if (!(player.hasPermission("invArmor.*") || player.hasPermission("invArmor.add"))) {
-                player.sendMessage(ChatColor.RED+"*Permission Error.( invArmor.* )");
-                return true;
-            }
-            for (Player p: players) {
-                Core.invArmor(player,p);
-            }
-            player.sendMessage(ChatColor.GREEN+"Invisibility of other all player\'s armor.");
-            return true;
-        }
+        List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
         if (args[0].equalsIgnoreCase("me")) {
             if (!(player.hasPermission("invArmor.*") || player.hasPermission("invArmor.me"))) {
                 player.sendMessage(ChatColor.RED+"*Permission Error.( invArmor.* )");
                 return true;
             }
             for (Player p: players) {
-                Core.invArmor(p,player);
+                Core.invArmor(player);
             }
             player.sendMessage(ChatColor.GREEN+"Your armor has become invisible.");
             return true;
         }
-        if (args[0].equalsIgnoreCase("reset")) {
+        /**if (args[0].equalsIgnoreCase("reset")) {
             if (!(player.hasPermission("invArmor.*") || player.hasPermission("invArmor.reset"))) {
                 player.sendMessage(ChatColor.RED+"*Permission Error.( invArmor.* )");
                 return true;
@@ -88,32 +77,7 @@ public class Main extends JavaPlugin {
             }
             player.sendMessage(ChatColor.GREEN+"Solved invisibility about your armor.");
             return true;
-        }
-        if (args[0].equalsIgnoreCase("player")) {
-            if (!(player.hasPermission("invArmor.*") || player.hasPermission("invArmor.player"))) {
-                player.sendMessage(ChatColor.RED+"*Permission Error.( invArmor.* )");
-                return true;
-            }
-            if (args.length < 2) {
-                return true;
-            }
-            Player victim = Bukkit.getPlayer(args[1]);
-            if (victim == null) {
-                player.sendMessage(ChatColor.RED+"Invalid player.");
-                return true;
-            }
-            Core.invArmor(player,victim);
-            player.sendMessage(ChatColor.GREEN+"Invisibility of "+victim.getDisplayName()+"\'s armor.");
-            return true;
-        }
-        if (args[0].equalsIgnoreCase("list")) {
-            if (!(player.hasPermission("invArmor.*") || player.hasPermission("invArmor.list"))) {
-                player.sendMessage(ChatColor.RED+"*Permission Error.( invArmor.* )");
-                return true;
-            }
-            ListInv.listHub(player);
-            return true;
-        }
+        }**/
         sendHelp(player);
         return true;
     }

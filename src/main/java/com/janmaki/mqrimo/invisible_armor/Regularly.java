@@ -9,7 +9,7 @@ import java.util.Set;
 
 
 class Regularly implements Listener {
-    private static Map<Player, Set<Player>> map;
+    private static Map<Player, Map<String, Boolean>> map;
     private static Main main;
 
     Regularly(Main main) {
@@ -24,8 +24,11 @@ class Regularly implements Listener {
             @Override
             public void run() {
                 for(Player player:map.keySet()) {
-                    for (Player victim:map.get(player)) {
-                        Core.invArmor(player,victim,false);
+                    Map<String, Boolean> booleanMap = map.get(player);
+                    for (String isArmorInvisible:booleanMap.keySet()) {
+                        Boolean whetherVisible = booleanMap.get(isArmorInvisible);
+                        if(whetherVisible)
+                            Core.invArmor(player);
                     }
                 }
                 regularly();
