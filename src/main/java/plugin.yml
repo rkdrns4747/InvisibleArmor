@@ -1,8 +1,8 @@
 name: InvisibleArmor
 version: 1.2
 main: com.janmaki.mqrimo.invisible_armor.Main
-author: JanMaki
-api-version: 1.13
+author: Pro_Snape
+api-version: 1.12.2
 
 commands:
   invArmor:
