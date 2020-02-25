@@ -3,7 +3,9 @@ package com.janmaki.mqrimo.invisible_armor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,8 +39,12 @@ class ListInv implements Listener {
         ItemMeta meta = playerSkull.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD+"Players you can not see armor.");
         playerSkull.setItemMeta(meta);
-
-        ItemStack defaultSkull = new ItemStack(Material.PLAYER_HEAD,1);
+        ItemStack mainSkull = new ItemStack(Material.SKULL_ITEM, 1);
+        SkullMeta skullMeta = (SkullMeta) mainSkull.getItemMeta();
+        UUID defaultUniqueId = UUID.fromString("8667ba71b85a4004af54457a9734eed7");
+        skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(defaultUniqueId));
+        mainSkull.setItemMeta(skullMeta);
+        ItemStack defaultSkull = mainSkull;
         meta = defaultSkull.getItemMeta();
         meta.setDisplayName(ChatColor.DARK_GREEN+"Players who can not see your armor.");
         defaultSkull.setItemMeta(meta);
@@ -118,7 +124,7 @@ class ListInv implements Listener {
             if ((event.getCurrentItem() == null) || (event.getCurrentItem().getType().equals(Material.AIR))) {
                 return;
             }
-            if (event.getCurrentItem().getType() == Material.PLAYER_HEAD) {
+            if (event.getCurrentItem().getType() == Material.SKULL_ITEM) {
                 ItemStack item = event.getCurrentItem();
                 Player headPlayer = Bukkit.getPlayer(item.getItemMeta().getLore().get(0));
                 Set<Player> set = Core.get(player);
@@ -146,7 +152,7 @@ class ListInv implements Listener {
             if ((event.getCurrentItem() == null) || (event.getCurrentItem().getType().equals(Material.AIR))) {
                 return;
             }
-            if (event.getCurrentItem().getType() == Material.PLAYER_HEAD) {
+            if (event.getCurrentItem().getType() == Material.SKULL_ITEM) {
                 ItemStack item = event.getCurrentItem();
                 Player headPlayer = Bukkit.getPlayer(item.getItemMeta().getLore().get(0));
                 Set<Player> set = Core.get(headPlayer);
@@ -181,7 +187,7 @@ class ListInv implements Listener {
     }
 
     private static ItemStack getSkull(Player player) {
-        ItemStack playerSkull = new ItemStack(Material.PLAYER_HEAD,1);
+        ItemStack playerSkull = new ItemStack(Material.SKULL_ITEM,1);
         SkullMeta pSkullMeta = (SkullMeta) playerSkull.getItemMeta();
         pSkullMeta.setOwningPlayer(player);
         pSkullMeta.setLocalizedName(ChatColor.stripColor(player.getDisplayName()));
