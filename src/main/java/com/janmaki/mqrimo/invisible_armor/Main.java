@@ -5,8 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,7 +16,6 @@ public class Main extends JavaPlugin {
     private static Map<Player, Map<String, Boolean>> map;
     private static Main instance;
     private static File saveFile;
-    private static YamlConfiguration yamlConfiguration;
     @Override
     public void onEnable() {
         new Regularly(this);
@@ -55,44 +52,25 @@ public class Main extends JavaPlugin {
         Player player = (Player) sender;
         if (args[0].equalsIgnoreCase("toggle")) {
             if (!(player.hasPermission("invArmor.*") || player.hasPermission("invArmor.command.toggle") || player.hasPermission("invArmor.command.*"))) {
-                player.sendMessage(ChatColor.RED+"You don't have enough permission, or you haven't buy this feature!");
+                player.sendMessage(ChatColor.RED+"아직 이 상품을 구매하지 않았거나, 상품을 사용할 권한을 부여받지 못했습니다.");
                 return true;
             }
             if(Core.offInvArmor(player)){
-                player.sendMessage(ChatColor.GREEN+"Your armor has become visible.");
+                player.sendMessage(ChatColor.GREEN+"갑옷 투명화를 비활성화 했습니다.");
             }else{
                 Core.invArmor(player);
-                player.sendMessage(ChatColor.GREEN+"Your armor has become invisible.");
+                player.sendMessage(ChatColor.GREEN+"갑옷 투명화를 활성화 했습니다.");
             }
 
             return true;
         }
-        /**if (args[0].equalsIgnoreCase("reset")) {
-            if (!(player.hasPermission("invArmor.*") || player.hasPermission("invArmor.reset"))) {
-                player.sendMessage(ChatColor.RED+"*Permission Error.( invArmor.* )");
-                return true;
-            }
-            Core.reset(player);
-            for (Player p: players) {
-                Set set = Core.get(p);
-                if (set == null) {
-                    set = new HashSet();
-                }
-                if (set.contains(player)) {
-                    set.remove(player);
-                    map.put(p,set);
-                }
-            }
-            player.sendMessage(ChatColor.GREEN+"Solved invisibility about your armor.");
-            return true;
-        }**/
         sendHelp(player);
         return true;
     }
 
     private void sendHelp(Player player) {
         player.sendMessage(ChatColor.DARK_GREEN + "=---------------------------------=");
-        player.sendMessage(ChatColor.GREEN + "/invArmor toggle" + ChatColor.DARK_GREEN + ": " + ChatColor.GREEN + "Invisibility of other all your armor.");
+        player.sendMessage(ChatColor.GREEN + "/invArmor toggle" + ChatColor.DARK_GREEN + ": " + ChatColor.GREEN + "갑옷 투명화를 켜거나 끕니다.");
         player.sendMessage(ChatColor.DARK_GREEN + "=---------------------------------=");
     }
     public static Main getInstance(){

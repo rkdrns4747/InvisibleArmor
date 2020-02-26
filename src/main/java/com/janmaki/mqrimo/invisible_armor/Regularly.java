@@ -5,7 +5,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
-import java.util.Set;
 
 
 class Regularly implements Listener {
@@ -27,8 +26,9 @@ class Regularly implements Listener {
                     Map<String, Boolean> booleanMap = map.get(player);
                     for (String isArmorInvisible:booleanMap.keySet()) {
                         Boolean whetherVisible = booleanMap.get(isArmorInvisible);
-                        if(whetherVisible)
-                            Core.invArmor(player);
+                        if(whetherVisible) {
+                            Core.regulator(player);
+                        }
                     }
                 }
                 regularly();
