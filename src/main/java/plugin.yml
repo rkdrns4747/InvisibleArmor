@@ -1,7 +1,7 @@
 name: InvisibleArmor
 version: 1.2
 main: com.janmaki.mqrimo.invisible_armor.Main
-author: Pro_Snape
+author: Pro_Snape (fork by janmaki)
 api-version: 1.12.2
 
 commands:
@@ -10,14 +10,8 @@ commands:
 
 permissions:
   invArmor.*:
-    default: op
-  invArmor.all:
-    default: true
-  invArmor.me:
-    default: true
-  invArmor.reset:
-    default: true
-  invArmor.player:
-    default: true
-  invArmor.list:
-    default: true
+    default: false
+  invArmor.command.*:
+    default: false
+  invArmor.command.toggle:
+    default: false

@@ -6,22 +6,30 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutEntityEquipment;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import com.janmaki.mqrimo.invisible_armor.Main;
+import org.bukkit.plugin.Plugin;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class Core {
     private static Map<Player, Map<String, Boolean>> map = new HashMap<>();
     private static CustomConfiguration sfile;
     private static FileConfiguration save;
+    private static File saveFile;
+    private static YamlConfiguration yamlConfiguration;
 
 
-    Core(CustomConfiguration sfile) {
-        this.sfile = sfile;
-        this.save = this.sfile.getConfig();
+    Core(File saveFile) {
+        this.saveFile = saveFile;
+        this.yamlConfiguration = YamlConfiguration.loadConfiguration(saveFile);
+        //this.save = this.saveFile.getConfig();
         map = Core.get();
     }
 
@@ -34,6 +42,9 @@ public class Core {
 
         List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
         for(Player p:players) {
+            if(p == victim){
+                continue;
+            }
             CraftPlayer craftPlayer = (CraftPlayer) p;
             ItemStack itemStack = new ItemStack(Material.AIR);
             PacketPlayOutEntityEquipment head = new PacketPlayOutEntityEquipment(entityPlayer.getId(), EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(itemStack));
@@ -63,8 +74,30 @@ public class Core {
             }
             list.add(sp.getDisplayName());
         }**/
-        save.set(victim.getUniqueId().toString(), set);
-        sfile.saveConfig();
+        //save.set(victim.getUniqueId().toString(), set);
+        //sfile.saveConfig();
+                /**
+        Plugin plugin = Main.getInstance();
+        File saveFile = new File(plugin.getDataFolder(), "save.yml");
+        try {
+            if (!saveFile.exists()) {
+                saveFile.createNewFile();
+            }
+        }catch (IOException e){
+            e.getStackTrace();
+        }
+
+        YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(saveFile);
+                 **/
+        yamlConfiguration.set(victim.getUniqueId().toString()+".isArmorInvisible", true);
+        try {
+            yamlConfiguration.save(saveFile);
+        }catch(IOException e){
+            e.getStackTrace();
+        }
+
+
+            reloadData(saveFile);
     }
 
     static Map<Player, Map<String, Boolean>> get(){
@@ -77,6 +110,104 @@ public class Core {
 
     static void put(Player player,Map<String, Boolean> set) {
         map.put(player,set);
+    }
+    public static Boolean sectionalBoolean(Player player){
+        /**
+        Plugin plugin = Main.getInstance();
+        File saveFile = new File(plugin.getDataFolder(), "save.yml");
+        try {
+            if (!saveFile.exists()) {
+                saveFile.createNewFile();
+                return false;
+            }
+        }catch (IOException e){
+            e.getStackTrace();
+        }
+        YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(saveFile);
+         **/
+        Object bool = yamlConfiguration.get(player.getUniqueId().toString()+".isArmorInvisible");
+        if(!(bool instanceof Boolean)){
+            if(bool == null)
+                return false;
+
+            try {
+                yamlConfiguration.save(saveFile);
+            }catch(IOException e){
+                e.getStackTrace();
+            }
+        }
+
+
+        return (Boolean) bool;
+    }
+    static Boolean offInvArmor(Player player) {
+        /**
+        Plugin plugin = Main.getInstance();
+        File saveFile = new File(plugin.getDataFolder(), "save.yml");
+        try {
+            if (!saveFile.exists()) {
+                saveFile.createNewFile();
+                return false;
+            }
+        }catch (IOException e){
+            e.getStackTrace();
+        }
+        YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(saveFile);
+         **/
+        Object bool = yamlConfiguration.get(player.getUniqueId().toString()+".isArmorInvisible");
+        if(!(bool instanceof Boolean)) {
+            return false;
+        }else if((Boolean) bool != true) {
+            return false;
+        }else {
+            map.remove(player);
+
+            //Map set;
+            //set = get(player);
+            //save.set(player.getUniqueId().toString(),set);
+            //sfile.saveConfig();
+            Map<String, Boolean> set = map.get(player);
+            if (set == null) {
+                set = new HashMap<String, Boolean>() {
+                };
+            }
+            set.put("isArmorInvisible", false);
+            map.put(player, set);
+            yamlConfiguration.set(player.getUniqueId().toString()+".isArmorInvisible", null);
+            try {
+                yamlConfiguration.save(saveFile);
+            }catch(IOException e){
+                Bukkit.getLogger().warning(e.toString());
+            }
+
+
+            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+
+            List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
+            ItemStack itemStackHelmet = player.getInventory().getHelmet();
+            ItemStack itemStackChest = player.getInventory().getChestplate();
+            ItemStack itemStackLeggings = player.getInventory().getLeggings();
+            ItemStack itemStackBoots = player.getInventory().getBoots();
+            for(Player p:players) {
+                if(p == player){
+                    continue;
+                }
+                CraftPlayer craftPlayer = (CraftPlayer) p;
+                PacketPlayOutEntityEquipment head = new PacketPlayOutEntityEquipment(entityPlayer.getId(), EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(itemStackHelmet));
+                craftPlayer.getHandle().playerConnection.sendPacket(head);
+                PacketPlayOutEntityEquipment chest = new PacketPlayOutEntityEquipment(entityPlayer.getId(), EnumItemSlot.CHEST, CraftItemStack.asNMSCopy(itemStackChest));
+                craftPlayer.getHandle().playerConnection.sendPacket(chest);
+                PacketPlayOutEntityEquipment feet = new PacketPlayOutEntityEquipment(entityPlayer.getId(), EnumItemSlot.FEET, CraftItemStack.asNMSCopy(itemStackBoots));
+                craftPlayer.getHandle().playerConnection.sendPacket(feet);
+                PacketPlayOutEntityEquipment legs = new PacketPlayOutEntityEquipment(entityPlayer.getId(), EnumItemSlot.LEGS, CraftItemStack.asNMSCopy(itemStackLeggings));
+                craftPlayer.getHandle().playerConnection.sendPacket(legs);
+            }
+            return true;
+        }
+    }
+    static void reloadData(File file){
+        yamlConfiguration = YamlConfiguration.loadConfiguration(file);
+
     }
 
 }
