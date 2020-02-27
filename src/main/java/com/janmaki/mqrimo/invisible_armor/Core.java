@@ -36,9 +36,11 @@ public class Core {
 
         List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
         for(Player p:players) {
-            if(p == victim){
-                continue;
-            }
+            /**
+             if(p == victim){
+             continue;
+             }
+             **/
             CraftPlayer craftPlayer = (CraftPlayer) p;
             ItemStack itemStack = new ItemStack(Material.AIR);
             PacketPlayOutEntityEquipment head = new PacketPlayOutEntityEquipment(entityPlayer.getId(), EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(itemStack));
@@ -65,9 +67,11 @@ public class Core {
 
         List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
         for(Player p:players) {
-            if(p == victim){
-                continue;
-            }
+            /**
+             if(p == victim){
+             continue;
+             }
+             **/
             CraftPlayer craftPlayer = (CraftPlayer) p;
             ItemStack itemStack = new ItemStack(Material.AIR);
             PacketPlayOutEntityEquipment head = new PacketPlayOutEntityEquipment(entityPlayer.getId(), EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(itemStack));
@@ -161,9 +165,11 @@ public class Core {
             ItemStack itemStackLeggings = player.getInventory().getLeggings();
             ItemStack itemStackBoots = player.getInventory().getBoots();
             for(Player p:players) {
+                /**
                 if(p == player){
                     continue;
                 }
+                **/
                 CraftPlayer craftPlayer = (CraftPlayer) p;
                 PacketPlayOutEntityEquipment head = new PacketPlayOutEntityEquipment(entityPlayer.getId(), EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(itemStackHelmet));
                 craftPlayer.getHandle().playerConnection.sendPacket(head);
