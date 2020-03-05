@@ -15,6 +15,8 @@ public class ClickEvent implements Listener {
 
     @EventHandler
     public void onPlayerClickInventory(InventoryClickEvent event){
+        if(!(event.getView().getTopInventory().getType().name().contains("CRAFTING")))
+            return;
         if(event.getClickedInventory() instanceof PlayerInventory){
             if(!(event.getWhoClicked() instanceof Player))
                 return;

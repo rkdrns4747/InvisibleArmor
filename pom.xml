@@ -16,6 +16,14 @@
             <version>1.15.2-R0.1-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.15.2-R0.1-SNAPSHOT</version>
+            <scope>system</scope>
+             <systemPath>${project.basedir}/src/main/resources/craftbukkit-1.15.2.jar</systemPath>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
