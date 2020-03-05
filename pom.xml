@@ -6,20 +6,16 @@
 
     <groupId>earthRealm</groupId>
     <artifactId>InvisibleArmor</artifactId>
-    <version>1.12.2-EARTHREALM</version>
+    <version>1.15.2-EARTHREALM</version>
 
 
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <version>1.15.2-R0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
-        </dependency>
+
     </dependencies>
     <build>
         <plugins>
